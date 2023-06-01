@@ -32,7 +32,6 @@ def make_etsy_search(search_query: str, shop_name: str, use_proxy: bool, proxy_c
 
                 new_tabs_opened = set(driver_search.window_handles) - {original_window}
                 for tab in new_tabs_opened:
-
                     driver_search.switch_to.window(tab)
                     time.sleep(WAIT_SECONDS)
                     like_item(driver=driver_search)
@@ -51,5 +50,5 @@ def make_etsy_search(search_query: str, shop_name: str, use_proxy: bool, proxy_c
             time.sleep(10)
         driver_search.close()
     except WebDriverException as e:
-        print('IN EXCEPTION. ERROR MESSAGE:')
+        print('DRIVER EXCEPTION. ERROR MESSAGE:')
         print(e.msg)

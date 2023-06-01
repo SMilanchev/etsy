@@ -1,4 +1,5 @@
 # In order to use a proxy with this project you need to add it in the proxies_db.json!
+# Before start add `SEARCH_QUERY`, `SHOP_NAME`, `CHROME_PATH` and `CHROME_DRIVER_PATH` in .env.
 # When adding proxy in it, it is required to fill out the following parameters if it:
 *      username
 *      password

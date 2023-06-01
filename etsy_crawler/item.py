@@ -57,7 +57,6 @@ def select_type_for_item(driver: webdriver.Chrome):
 
 
 def add_to_basket(driver: webdriver.Chrome):
-    from selenium.webdriver.common.by import By
     add_to_basket_class_name = 'wt-display-flex-xs.wt-flex-direction-column-xs.wt-flex-wrap.' \
                                'wt-flex-direction-row-md.wt-flex-direction-column-lg'
     add_to_basket_elements = driver.find_elements(by=By.CLASS_NAME, value=add_to_basket_class_name)

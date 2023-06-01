@@ -1,8 +1,6 @@
 from etsy_crawler.chrome_driver import get_driver_and_browser_versions
 import settings
-from etsy_crawler.proxies import Proxy, delete_expiring_proxies
-from settings import DB_PATH
-import json
+from etsy_crawler.proxies import delete_expiring_proxies
 
 
 class IncompatibleVersionsError(Exception):

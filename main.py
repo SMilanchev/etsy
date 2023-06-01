@@ -1,5 +1,6 @@
 from etsy_crawler import make_etsy_search
 from utils import init_project_settings
+import settings
 
 init_project_settings()
 
@@ -13,9 +14,9 @@ proxy_countries: list
 
 total_searches = 20
 pages_per_search = 3
-search_query = 'car vent clips'
-shop_name = 'lubidubishop'
-use_proxy = True
+search_query = settings.SEARCH_QUERY
+shop_name = settings.SHOP_NAME
+use_proxy = False
 proxy_countries = ['US']
 
 

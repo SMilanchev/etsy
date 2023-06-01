@@ -18,3 +18,6 @@ DB_PATH = os.path.join(os.getcwd(), DB_NAME)
 
 PROXY_DATETIME_FORMAT = '2023-05-06 20:09:50'
 LEFT_HOURS_PROXY_TO_REMOVE = 2
+
+SEARCH_QUERY = os.environ['SEARCH_QUERY']
+SHOP_NAME = os.environ['SHOP_NAME']
