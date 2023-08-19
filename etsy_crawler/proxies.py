@@ -25,6 +25,24 @@ class Proxy(BaseModel):
         self.usage += 1
         self.last_usage = datetime.now().strftime(PROXY_DATETIME_FORMAT)
 
+    def get_proxy_db_index(self, proxies_db: list[dict]):
+        for i in range(len(proxies_db)):
+            current_proxy = proxies_db[i]
+            if self.username == current_proxy['username'] and \
+               self.password == current_proxy['password'] and \
+               self.host == current_proxy['host'] and \
+               self.port == current_proxy['port']:
+                return i
+
+    def save(self):
+        with open(DB_PATH) as f:
+            proxies_raw: list[dict[str, str]] = json.load(f)['proxies']
+
+        proxy_db_index = self.get_proxy_db_index(proxies_db=proxies_raw)
+        proxies_raw[proxy_db_index] = self.dict()
+        with open(DB_PATH, 'w') as f:
+            f.write(json.dumps({'proxies': proxies_raw}))
+
 
 class NoMatchingProxiesError(Exception):
     pass
@@ -49,20 +67,8 @@ def get_proxy(countries: list) -> Proxy | None:
     if proxies_sorted_by_usage:
         proxy = proxies_sorted_by_usage[0]
         proxy.add_usage()
+        proxy.save()
         return proxy
-
-
-def save_proxy(proxy: Proxy):
-    with open(DB_PATH) as f:
-        proxies_raw: list[dict[str, str]] = json.load(f)['proxies']
-
-    for i in range(len(proxies_raw)):
-        current_proxy = proxies_raw[i]
-        if current_proxy['username'] == proxy.username and current_proxy['password'] == proxy.password and\
-                current_proxy['host'] == proxy.host and current_proxy['port'] == proxy.port:
-            proxies_raw[i] = proxy.dict()
-            with open(DB_PATH, 'w') as f:
-                f.write(json.dumps({'proxies': proxies_raw}))
 
 
 def delete_expiring_proxies():
@@ -75,8 +81,8 @@ def delete_expiring_proxies():
         current_dt = datetime.now()
         datetime_end = datetime.fromisoformat(proxy.end_date)
         remaining_seconds = int((datetime_end.astimezone().replace(tzinfo=None) - current_dt).total_seconds())
-        if remaining_seconds > 60*60 * LEFT_HOURS_PROXY_TO_REMOVE:
+        if remaining_seconds > 60 * 60 * LEFT_HOURS_PROXY_TO_REMOVE:
             proxies_to_save.append(proxy)
 
     with open(DB_PATH, 'w') as f:
-        f.write(json.dumps({'proxies': [p.dict() for p in proxies]}))
+        f.write(json.dumps({'proxies': [p.dict() for p in proxies_to_save]}))
