@@ -45,24 +45,35 @@ class Proxy(BaseModel):
 
 
 class NoMatchingProxiesError(Exception):
+    """Raised when there are proxies in the proxies_db.json,
+    but none of them matches the criterias requested by user."""
     pass
 
 
 class NoAnyProxiesError(Exception):
+    """Raised when there are no proxies is the proxies_db.json,
+    but the user has requested the program to use proxy."""
     pass
 
 
-def get_proxy(countries: list) -> Proxy | None:
+def get_proxy(countries: list, versions: list) -> Proxy | None:
     with open(DB_PATH) as f:
         proxies_raw: list[dict[str, str]] = json.load(f)['proxies']
 
     proxies = [Proxy(**proxy) for proxy in proxies_raw]
     if not proxies:
         raise NoAnyProxiesError('You DO NOT HAVE any proxies! Add proxies, or set use_proxy to False')
+
     if countries:
-        proxies = list(filter(lambda x: x.country in countries, proxies))
+        proxies = list(filter(lambda proxy: proxy.country in countries, proxies))
         if not proxies:
             raise NoMatchingProxiesError('No proxies from selected countries! Change selected countries!')
+
+    if versions:
+        proxies = list(filter(lambda proxy: proxy.version in versions, proxies))
+        if not proxies:
+            raise NoMatchingProxiesError('No proxies from selected versions! Change selected versions!')
+
     proxies_sorted_by_usage = sorted(proxies, key=lambda x: x.usage)
     if proxies_sorted_by_usage:
         proxy = proxies_sorted_by_usage[0]

@@ -12,9 +12,10 @@ from settings import WAIT_SECONDS
 
 
 def make_etsy_search(search_query: str, shop_name: str, use_proxy: bool, proxy_countries: list[str],
-                     pages_to_iterate: int = 10):
+                     proxy_versions: list, pages_to_iterate: int = 10):
     try:
-        driver_search = make_search(search_query=search_query, use_proxy=use_proxy, proxy_countries=proxy_countries)
+        driver_search = make_search(search_query=search_query, use_proxy=use_proxy,
+                                    proxy_countries=proxy_countries, proxy_versions=proxy_versions)
         for i in range(1, pages_to_iterate + 1):
             scroll_height = random.randint(1800, 3000)
             driver_search.execute_script(f"window.scrollTo(0, {scroll_height});")

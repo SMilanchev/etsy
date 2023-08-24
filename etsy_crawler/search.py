@@ -7,13 +7,13 @@ from etsy_crawler.chrome_driver import get_driver
 from etsy_crawler.proxies import get_proxy
 
 
-def make_search(search_query: str, use_proxy: bool, proxy_countries: list):
+def make_search(search_query: str, use_proxy: bool, proxy_countries: list, proxy_versions: list):
     search_query = search_query.strip()
     search_query = search_query.replace(' ', '+')
 
     proxy = None
     if use_proxy:
-        proxy = get_proxy(countries=proxy_countries)
+        proxy = get_proxy(countries=proxy_countries, versions=proxy_versions)
     driver = get_driver(proxy=proxy)
     url_to_get = f'https://www.etsy.com/search?q={search_query}&ref=pagination&page=1'
     driver.get(url_to_get)
