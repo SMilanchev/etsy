@@ -21,3 +21,5 @@ LEFT_HOURS_PROXY_TO_REMOVE = 2
 
 SEARCH_QUERY = os.environ['SEARCH_QUERY']
 SHOP_NAME = os.environ['SHOP_NAME']
+
+STATISTIC_IMAGES_DIR = os.path.join(os.getcwd(), 'statistics_results')

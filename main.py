@@ -1,8 +1,10 @@
 from etsy_crawler import make_etsy_search
+from statistics import make_statistics
 from utils import init_project_settings
 import settings
 
-init_project_settings()
+
+# init_project_settings()
 
 
 total_searches: int
@@ -22,7 +24,13 @@ proxy_countries = []
 proxy_versions = []
 
 
-for i in range(1, total_searches+1):
-    print(f'-----  NEW SEARCH  -----  SEARCH COUNT:  {i}  -----')
+data = []
+make_statistics(data=data)
+for search_num in range(1, total_searches+1):
+    print(f'-----  NEW SEARCH  -----  SEARCH COUNT:  {search_num}  -----')
+
     make_etsy_search(search_query=search_query, shop_name=shop_name, pages_to_iterate=pages_per_search,
-                     use_proxy=use_proxy, proxy_countries=proxy_countries, proxy_versions=proxy_versions)
+                     use_proxy=use_proxy, proxy_countries=proxy_countries, proxy_versions=proxy_versions,
+                     search_num=search_num, stats_data=data)
+
+make_statistics(data=data)

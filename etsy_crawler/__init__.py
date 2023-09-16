@@ -12,7 +12,9 @@ from settings import WAIT_SECONDS
 
 
 def make_etsy_search(search_query: str, shop_name: str, use_proxy: bool, proxy_countries: list[str],
-                     proxy_versions: list, pages_to_iterate: int = 10):
+                     proxy_versions: list, search_num: int,  stats_data: list, pages_to_iterate: int = 10,
+                     ):
+    df_row = {'search_query': search_query, 'search_num': search_num, 'state': 'success'}
     try:
         driver_search = make_search(search_query=search_query, use_proxy=use_proxy,
                                     proxy_countries=proxy_countries, proxy_versions=proxy_versions)
@@ -23,6 +25,7 @@ def make_etsy_search(search_query: str, shop_name: str, use_proxy: bool, proxy_c
             page_search_result = find_search_result_on_page(driver=driver_search)
             matching_elements = find_matching_elements_on_page(search_result=page_search_result, shop_name=shop_name)
             print('PAGE NUM:', i, 'ELEMENTS MATCHING:', len(matching_elements))
+            df_row[f'page_{i}'] = len(matching_elements)
             if len(matching_elements) > 0:
                 original_window = driver_search.current_window_handle
 
@@ -51,5 +54,9 @@ def make_etsy_search(search_query: str, shop_name: str, use_proxy: bool, proxy_c
             time.sleep(10)
         driver_search.close()
     except WebDriverException as e:
+        df_row['state'] = 'failure'
+        [df_row.update({f'page_{i}': 0}) for i in range(1, pages_to_iterate + 1) if f'page_{i}' not in df_row]
         print('DRIVER EXCEPTION. ERROR MESSAGE:')
         print(e.msg)
+    finally:
+        stats_data.append(df_row)

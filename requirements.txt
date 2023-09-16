@@ -2,3 +2,6 @@ selenium~=4.8.3
 selenium-wire
 python-dotenv~=1.0.0
 pydantic~=1.10.7
+pandas~=2.0.3
+numpy~=1.25.2
+matplotlib~=3.7.2
